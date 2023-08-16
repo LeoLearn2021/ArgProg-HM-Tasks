@@ -2,14 +2,18 @@ package com.mindhub.homebanking;
 
 import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
+import com.mindhub.homebanking.models.Transaction;
+import com.mindhub.homebanking.models.TransactionType;
 import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
+import com.mindhub.homebanking.repositories.TransactionRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @SpringBootApplication
 public class HomebankingApplication {
@@ -20,7 +24,7 @@ public class HomebankingApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository){
+	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository){
 		return args -> {
 
 			//Create Client
@@ -70,7 +74,39 @@ public class HomebankingApplication {
 			//Save account to DB
 			accountRepository.save(account4);
 
+			//Create some transactions for account 1
+			Transaction transaction1 = new Transaction();
+			transaction1.setType(TransactionType.DEBIT);
+			transaction1.setAmount(-500);
+			transaction1.setDate(LocalDateTime.now());
+			transaction1.setDescription("Some item.");
+			//link transaction to account
+			account1.addTransaction(transaction1);
+			account1.setBalance(account1.getBalance() + transaction1.getAmount());
+			accountRepository.save(account1);
+			//Save transaction to DB
+			transactionRepository.save(transaction1);
+
+			Transaction transaction2 = new Transaction(TransactionType.CREDIT, 350d, "Returned Item", LocalDateTime.now());
+			account1.addTransaction(transaction2);
+			account1.setBalance(account1.getBalance() + transaction2.getAmount());
+			accountRepository.save(account1);
+			transactionRepository.save(transaction2);
+
+			//Create some transactions for account 2
+
+			Transaction transaction3 = new Transaction(TransactionType.DEBIT, -3543.5d, "Something Usefull", LocalDateTime.now());
+			account2.addTransaction(transaction3);
+			account2.setBalance(account2.getBalance() + transaction3.getAmount());
+			accountRepository.save(account2);
+			transactionRepository.save(transaction3);
+
+			Transaction transaction4 = new Transaction(TransactionType.CREDIT, 343.32d, "Sale product", LocalDateTime.now());
+			account2.addTransaction(transaction4);
+			account2.setBalance(account2.getBalance() + transaction4.getAmount());
+			accountRepository.save(account2);
+			transactionRepository.save(transaction4);
+
 		};
 	}
-
 }
