@@ -20,7 +20,7 @@ public class HomebankingApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository){
+	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository, CardRepository cardRepository){
 		return args -> {
 
 			//Create Client
@@ -149,6 +149,20 @@ public class HomebankingApplication {
 			clientLoanRepository.save(clientLoan3);
 			clientLoanRepository.save(clientLoan4);
 
+			// Assigments for Spring5 (Task 5: Implement Cards)
+
+			Card card1 = new Card("1111-2222-3333-4444", CardType.DEBIT, CardColor.GOLD, 123, LocalDate.now(), LocalDate.now().plusYears(5));
+			Card card2 = new Card("2222-3333-4444-5555", CardType.CREDIT, CardColor.TITANIUM, 234, LocalDate.now(), LocalDate.now().plusYears(5));
+			Card card3 = new Card("3333-4444-5555-6666", CardType.CREDIT, CardColor.SILVER, 345, LocalDate.now(), LocalDate.now().plusYears(5));
+
+			client1.addCard(card1);
+			client1.addCard(card2);
+			clientRepository.save(client1);
+			cardRepository.save(card1);
+			cardRepository.save(card2);
+			client2.addCard(card3);
+			clientRepository.save(client2);
+			cardRepository.save(card3);
 
 		};
 	}
