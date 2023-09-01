@@ -2,10 +2,12 @@ package com.mindhub.homebanking;
 
 import com.mindhub.homebanking.models.*;
 import com.mindhub.homebanking.repositories.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,21 +18,27 @@ public class HomebankingApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(HomebankingApplication.class, args);
-
 	}
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Bean
 	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository, CardRepository cardRepository){
 		return args -> {
 
 			//Create Client
-			Client client1 = new Client("Melba", "Morel", "melba@mindhub.com");
+			Client client1 = new Client("Melba", "Morel", "melba@mindhub.com", passwordEncoder.encode("melba"));
 			System.out.println(client1);
 			//Save client to DB
 			clientRepository.save(client1);
 			System.out.println(client1);
-			Client client2 = new Client("Oreo", "Milka", "oreo@Choko.com");
+			Client client2 = new Client("Oreo", "Milka", "oreo@Choko.com", passwordEncoder.encode("oreo"));
 			clientRepository.save(client2);
+
+			//Create Admin
+			Client admin = new Client("Admin", "Admin", "admin@admin.com", passwordEncoder.encode("admin"));
+			clientRepository.save(admin);
 
 			//Create accounts
 			Account account1 = new Account();

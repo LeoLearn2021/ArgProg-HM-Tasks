@@ -11,7 +11,7 @@ Vue.createApp({
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
             //console.log("id= ",id);
-            axios.get(`/api/accounts/${id}`)
+            axios.get(`/api/current/accounts/${id}`)
                 .then((response) => {
                     //get client ifo
                     this.accountInfo = response.data;

@@ -10,7 +10,7 @@ createApp({
     },
     methods: {
         getData() {
-            axios.get("/api/clients/1")
+            axios.get("/api/clients/current")
                 .then((response) => {
                     //get client ifo
                     this.clientInfo = response.data;
@@ -23,7 +23,14 @@ createApp({
         },
         formatDate(date) {
             return new Date(date).toLocaleDateString('en-gb');
+        },
+        logout (){
+            axios.post("/api/logout")
+                .then(response => console.log('signed out.'))
+                    .then
+                return (window.location.href = "/web/index.html")
         }
+
     },
     mounted() {
         this.errorToats = new bootstrap.Toast(document.getElementById('danger-toast'));
