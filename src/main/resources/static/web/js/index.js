@@ -28,8 +28,8 @@ Vue.createApp({
         },
         signUp: function (event) {
             event.preventDefault();
-            console.log(event);
-            console.log(`firstName=${this.firstName}&lastName=${this.lastName}&email=${this.email}&password=${this.password}`);
+            //console.log(event);
+            //console.log(`firstName=${this.firstName}&lastName=${this.lastName}&email=${this.email}&password=${this.password}`);
             let config = {
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded'

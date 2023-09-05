@@ -56,7 +56,7 @@
 }
 
 .welcome {
-    background: linear-gradient(45deg, #5573f8cc, #2d0a66);
+    background: linear-gradient(45deg, #ee0979, #ff6a00);
 }
 
 .welcome-logo {
@@ -72,18 +72,10 @@
 .index-container {
     margin-top: 10%;
 }
-
-.rounded-5 {
-    border-radius: 10px;
-}
-
-#newAccBlock,
-#newCardBlock,
-#cardsTitle {
+#newAccBlock {
     display: inline-block;
 }
-#newAccount,
-#addCard {
+#newAccount {
     margin-left: 2rem;
     margin-bottom: 1rem;
 }
