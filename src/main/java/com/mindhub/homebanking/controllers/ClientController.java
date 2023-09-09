@@ -4,7 +4,7 @@ import com.mindhub.homebanking.dtos.ClientDTO;
 import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.repositories.AccountRepository;
-import com.mindhub.homebanking.repositories.ClientRepository;
+import com.mindhub.homebanking.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.mindhub.homebanking.controllers.AccountController.checkedNewAccountNumber;
 
@@ -22,7 +21,7 @@ import static com.mindhub.homebanking.controllers.AccountController.checkedNewAc
 @RequestMapping("/api")
 public class ClientController {
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
     @Autowired
     private AccountRepository accountRepository;
@@ -33,24 +32,17 @@ public class ClientController {
     //Clients  Servlet
     @RequestMapping("/clients")
     public List<ClientDTO> getClients(){
-        List<Client> clientList = clientRepository.findAll();
-
-        List<ClientDTO> clientDTOList =
-                clientList
-                        .stream()
-                        .map( client -> new ClientDTO(client))
-                        .collect(Collectors.toList());
-        return clientDTOList;
+        return clientService.getClientsDTO();
     }
     @RequestMapping("/clients/{id}")
     public ClientDTO getClient(@PathVariable Long id){
-        return new ClientDTO(clientRepository.findById(id).orElse(null));
+        return clientService.getClientDTO(id);
     }
 
     @RequestMapping("clients/current")
     public ResponseEntity<Object> getClientAuth(Authentication authentication){
         if (authentication != null){
-            return new ResponseEntity<>( new ClientDTO(clientRepository.findByEmail(authentication.getName())), HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(clientService.getClientAuth(authentication), HttpStatus.ACCEPTED);
         } else {
             return new ResponseEntity<>("No client logged", HttpStatus.FORBIDDEN);
         }
@@ -61,28 +53,26 @@ public class ClientController {
             @RequestParam String firstName, @RequestParam String lastName,
             @RequestParam String email, @RequestParam String password){
         if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty()){
-            return new ResponseEntity<>("Missing data", HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>("All fields must be completed.", HttpStatus.FORBIDDEN);
         }
-        if (clientRepository.findByEmail(email) !=  null) {
+        if (clientService.findByEmail(email) !=  null) {
             return new ResponseEntity<>("Name already in use", HttpStatus.FORBIDDEN);
         }
 
         Client client = new Client(firstName, lastName, email, passwordEncoder.encode(password));
         //Create and associate new account to newly created client
         Account account = new Account(checkedNewAccountNumber(accountRepository), LocalDate.now(), 0.0d);
-        System.out.println(account.toString());
         client.addAccount(account);
-        clientRepository.save(client);
+        clientService.saveClient(client);
         accountRepository.save(account);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>("Client created.", HttpStatus.CREATED);
     }
 
     @GetMapping("/clients/online")
     public ResponseEntity<String> connection(Authentication authentication){
-
         if (authentication != null){
-            Client client = clientRepository.findByEmail(authentication.getName());
+            Client client = clientService.getClientAuth(authentication);
             return new ResponseEntity<>("Client logged: "+client.getFirstName(), HttpStatus.ACCEPTED);
         } else {
             return  new ResponseEntity<>("No usr logged", HttpStatus.FORBIDDEN);

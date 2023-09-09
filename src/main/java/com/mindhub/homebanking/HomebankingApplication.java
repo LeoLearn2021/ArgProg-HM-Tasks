@@ -127,8 +127,8 @@ public class HomebankingApplication {
 			//ClientLoan clientLoan2 = new ClientLoan(50000,12, client1, personalLoan1);
 			// Constructor must instaciate objects, not make relations. For relations use methods add created in
 			// classes assosiated with the OneToMany anotations (note in corrections).
-			ClientLoan clientLoan1 = new ClientLoan(400000, 60);
-			ClientLoan clientLoan2 = new ClientLoan(50000,12);
+			ClientLoan clientLoan1 = new ClientLoan(400000d, 60);
+			ClientLoan clientLoan2 = new ClientLoan(50000d,12);
 			client1.addLoan(clientLoan1);
 			client1.addLoan(clientLoan2);
 			clientRepository.save(client1);
@@ -144,8 +144,8 @@ public class HomebankingApplication {
 
 			//ClientLoan clientLoan3 = new ClientLoan(100000, 24, client2, personalLoan1);
 			//ClientLoan clientLoan4 = new ClientLoan(200000,36, client2, carLoan1);
-			ClientLoan clientLoan3 = new ClientLoan(100000, 24);
-			ClientLoan clientLoan4 = new ClientLoan(200000,36);
+			ClientLoan clientLoan3 = new ClientLoan(100000d, 24);
+			ClientLoan clientLoan4 = new ClientLoan(200000d,36);
 			client2.addLoan(clientLoan3);
 			client2.addLoan(clientLoan4);
 			clientRepository.save(client2);

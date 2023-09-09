@@ -55,7 +55,7 @@ public class AccountController {
     public ResponseEntity<Object> getAccounts(Authentication authentication){
         if (authentication != null){
             ClientDTO clientDTO = new ClientDTO(clientRepository.findByEmail(authentication.getName()));
-            System.out.println(clientDTO.getAccounts().toString());
+            //System.out.println(clientDTO.getAccounts().toString());
             return new ResponseEntity<>(clientDTO.getAccounts(), HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>("No client.", HttpStatus.FORBIDDEN);

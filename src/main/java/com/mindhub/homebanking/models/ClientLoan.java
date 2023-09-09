@@ -1,5 +1,6 @@
 package com.mindhub.homebanking.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ public class ClientLoan {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     private Long id;
 
-    private Integer amount;
+    private Double amount;
 
     private Integer payments;
 
@@ -26,13 +27,13 @@ public class ClientLoan {
 
     public ClientLoan() {}
 
-    public ClientLoan(Integer amount, Integer payments, Client client, Loan loan) {
+    public ClientLoan(Double amount, Integer payments, Client client, Loan loan) {
         this.amount = amount;
         this.payments = payments;
         this.client = client;
         this.loan = loan;
     }
-    public ClientLoan(Integer amount, Integer payments) {
+    public ClientLoan(Double amount, Integer payments) {
         this.amount = amount;
         this.payments = payments;
     }
@@ -41,11 +42,11 @@ public class ClientLoan {
         return id;
     }
 
-    public Integer getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -57,6 +58,7 @@ public class ClientLoan {
         this.payments = payments;
     }
 
+    @JsonIgnore
     public Client getClient() {
         return client;
     }
